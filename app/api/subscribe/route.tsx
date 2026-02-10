@@ -1,44 +1,30 @@
-import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+
+import { resend } from "@/lib/resend"
+import { supabase } from "@/lib/supabase"
+import crypto from "crypto"
 
 export async function POST(req: Request) {
-    try {
-        const body = await req.json();
-        console.log("BODY:", body);
 
-        const { email } = body;
+    const { email } = await req.json()
 
-        if (!email) {
-        return NextResponse.json(
-            { error: "Email required" },
-            { status: 400 }
-        );
-        }
+    const token = crypto.randomUUID()
 
-        const { data, error } = await supabase.auth.signUp({
+    await supabase
+        .from("newsletter_subscribers")
+        .insert({
         email,
-        password: crypto.randomUUID(),
-        });
+        verification_token: token
+        })
 
-        console.log("SUPABASE RESPONSE:", data, error);
+    const link =
+        `${process.env.NEXT_PUBLIC_SITE_URL}/verify?token=${token}`
 
-        if (error) {
-        return NextResponse.json(
-            { error: error.message },
-            { status: 400 }
-        );
-        }
+    await resend.emails.send({
+        from: "rolcy@mhalandingpage.adityakosuru.online",
+        to: email,
+        subject: "Verify subscription",
+        html: `<a href="${link}">Verify Email</a>`
+    })
 
-        return NextResponse.json({
-        message: "Verification email sent!",
-        });
-
-    } catch (err) {
-        console.error("SERVER ERROR:", err);
-
-        return NextResponse.json(
-        { error: String(err) },
-        { status: 500 }
-        );
-    }
+    return Response.json({ success: true })
 }
