@@ -4,6 +4,8 @@ import ChatPreview from "@/components/ChatPreview"
 import Signup from "@/components/Signup"
 import Reviews from "@/components/Reviews"
 import { Header } from "@/components/header-2"
+import { FeatureDemo } from "@/components/new_features"
+import KnowMoreAboutMe from "@/components/knowmore"
 
 
 
@@ -26,12 +28,19 @@ export default function Home() {
     <ChatPreview />
   </section>
 
+  {/* <section id="new features">
+    <FeatureDemo />
+  </section> */}
+
   <section id="reviews">
     <Reviews />
   </section>
 
   <section id="signup">
     <Signup />
+  </section>
+  <section id="KnowMoreAboutMe">
+    <KnowMoreAboutMe />
   </section>
   </> 
   ) 

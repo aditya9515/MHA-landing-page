@@ -1,90 +1,69 @@
-"use client"
+import { CommentThread, CommentType } from "@/components/reddit-nested-thread-reply";
 
-import { useEffect, useState } from "react"
-import { addDoc, collection, getDocs, orderBy, query } from "firebase/firestore"
-import { db } from "@/lib/firebase"
-import { Button } from "@/components/ui/button"
-import { ClientReviews } from "@/components/ui/client-reviews"
-
-type Review = {
-  rating: number
-  reviewer: string
-  roleReviewer: string
-  review: string
-  date: string
-}
-
-export default function Reviews() {
-  const [text, setText] = useState("")
-  const [reviews, setReviews] = useState<Review[]>([])
-
-  // ----------------------------
-  // Fetch reviews from Firebase
-  // ----------------------------
-  const fetchReviews = async () => {
-    const q = query(
-      collection(db, "reviews"),
-      orderBy("createdAt", "desc")
-    )
-
-    const snapshot = await getDocs(q)
-
-    const data = snapshot.docs.map(doc => {
-      const r = doc.data()
-
-      return {
-        rating: 5,
-        reviewer: "Anonymous User",
-        roleReviewer: "Verified User",
-        review: r.review,
-        date: r.createdAt?.toDate().toISOString().split("T")[0],
+// Sample data for the discussion thread
+const sampleComments: CommentType[] = [
+  {
+    id: 1,
+    author: "techguru42",
+    content: "This is a really interesting discussion about React components. I've been working with similar patterns and found that proper state management is crucial for nested structures like this.",
+    timestamp: "2h",
+    upvotes: 24,
+    downvotes: 2,
+    replies: [
+      {
+        id: 2,
+        author: "devninja",
+        content: "Absolutely agree! What state management solution do you recommend for deeply nested components?",
+        timestamp: "1h",
+        upvotes: 8,
+        downvotes: 0,
+        replies: [
+          {
+            id: 3,
+            author: "techguru42",
+            content: "I usually go with Zustand for simpler cases, but Redux Toolkit for more complex applications. The key is avoiding prop drilling.",
+            timestamp: "45m",
+            upvotes: 12,
+            downvotes: 1,
+            replies: []
+          }
+        ]
+      },
+      {
+        id: 4,
+        author: "reactfan",
+        content: "Have you tried using React Context for this? I find it works well for theme management in nested components.",
+        timestamp: "30m",
+        upvotes: 5,
+        downvotes: 0,
+        replies: []
       }
-    })
-
-    setReviews(data)
+    ]
+  },
+  {
+    id: 5,
+    author: "designerdev",
+    content: "The UI looks great! Really clean design. How did you handle the responsive behavior on mobile?",
+    timestamp: "3h",
+    upvotes: 15,
+    downvotes: 0,
+    replies: []
   }
+];
 
-  useEffect(() => {
-    fetchReviews()
-  }, [])
-
-  // ----------------------------
-  // Submit review
-  // ----------------------------
-  const submit = async () => {
-    if (!text.trim()) return
-
-    await addDoc(collection(db, "reviews"), {
-      review: text,
-      createdAt: new Date(),
-    })
-
-    setText("")
-    fetchReviews()
-  }
-
+// The demo component that renders the CommentThread
+const CommentThreadDemo = () => {
   return (
-    <section className="py-24 max-w-5xl mx-auto px-6 space-y-12">
-      <h2 className="text-3xl font-semibold text-center">
-        What Users Are Saying
-      </h2>
-
-      {/* Reviews UI */}
-      <ClientReviews reviews={reviews} />
-
-      {/* Review input */}
-      <div className="max-w-xl mx-auto space-y-4">
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Share your experience..."
-          className="w-full border rounded-xl p-4 bg-background"
-        />
-
-        <Button className="w-full" onClick={submit}>
-          Submit Review
-        </Button>
+    <div className="bg-background text-foreground w-full min-h-screen">
+      <div className="text-center space-y-2 pt-12 pb-6">
+        <h1 className="text-3xl font-bold">Discussion Thread</h1>
+        <p className="text-muted-foreground">
+          A Reddit-style nested comment system with voting and replies.
+        </p>
       </div>
-    </section>
-  )
-}
+      <CommentThread initialComments={sampleComments} />
+    </div>
+  );
+};
+
+export default CommentThreadDemo;
