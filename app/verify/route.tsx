@@ -26,16 +26,30 @@ export async function GET(req: Request) {
         )
         }
 
-        // Activate subscriber
+        // ✅ Expiry check
+        const createdAt = new Date(data.created_at)
+        const now = new Date()
+
+        const diffMs = now.getTime() - createdAt.getTime()
+        const diffMinutes = diffMs / 60000
+
+        if (diffMinutes > 2) {
+        return Response.redirect(
+            `${process.env.NEXT_PUBLIC_SITE_URL}/error`
+        )
+        }
+
+        // ✅ Activate subscriber
         await supabase
         .from("newsletter_subscribers")
         .update({
             status: "active",
-            verification_token: null
+            verification_token: null,
+            verified_at: new Date()
         })
         .eq("id", data.id)
 
-        // Add to resend audience
+        // ✅ Add to resend audience
         await resend.contacts.create({
         email: data.email,
         audienceId: process.env.RESEND_AUDIENCE_ID!
