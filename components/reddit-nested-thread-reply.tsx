@@ -1,22 +1,21 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 import {
   ChevronUp,
   ChevronDown,
-  MessageSquare,
   MoreHorizontal,
   Reply,
   Award,
   Share,
-} from 'lucide-react';
+  MessageSquare
+} from "lucide-react";
 
-// Define the type for a single comment
 export interface CommentType {
   id: number | string;
   author: string;
@@ -27,7 +26,6 @@ export interface CommentType {
   replies: CommentType[];
 }
 
-// Props for the internal Comment component
 interface CommentProps {
   comment: CommentType;
   depth?: number;
@@ -35,217 +33,220 @@ interface CommentProps {
   isOp?: boolean;
 }
 
-// Internal recursive component to render each comment and its replies
-const Comment: React.FC<CommentProps> = ({ comment, depth = 0, onReply, isOp = false }) => {
+/* =============================
+   Single Comment Renderer
+============================= */
+const Comment: React.FC<CommentProps> = ({
+  comment,
+  depth = 0,
+  onReply,
+  isOp = false
+}) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [showReplyBox, setShowReplyBox] = useState(false);
-  const [userVote, setUserVote] = useState<'up' | 'down' | null>(null);
-  const [replyText, setReplyText] = useState('');
+  const [replyText, setReplyText] = useState("");
+  const [userVote, setUserVote] = useState<"up" | "down" | null>(null);
 
-  const handleVote = (voteType: 'up' | 'down') => {
-    setUserVote(userVote === voteType ? null : voteType);
-  };
+  const netScore =
+    comment.upvotes -
+    comment.downvotes +
+    (userVote === "up" ? 1 : userVote === "down" ? -1 : 0);
 
-  const handleReplySubmit = () => {
-    if (replyText.trim()) {
-      onReply(comment.id, replyText);
-      setReplyText('');
-      setShowReplyBox(false);
-    }
-  };
-
-  const getInitials = (name: string) => {
-    return name.split('').slice(0, 2).join('').toUpperCase();
-  };
+  function handleVote(type: "up" | "down") {
+    setUserVote(userVote === type ? null : type);
+  }
   
-  const netScore = comment.upvotes - comment.downvotes + (userVote === 'up' ? 1 : userVote === 'down' ? -1 : 0);
+  function formatTimestamp(timestamp: string) {
+    const date = new Date(timestamp);
+
+    return new Intl.DateTimeFormat("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    }).format(date);
+  }
+
+  function handleReplySubmit() {
+    if (!replyText.trim()) return;
+    onReply(comment.id, replyText);
+    setReplyText("");
+    setShowReplyBox(false);
+  }
+
+  const getInitials = (name: string) =>
+    name.slice(0, 2).toUpperCase();
 
   return (
-    <div className={`${depth > 0 ? 'ml-4 md:ml-6 border-muted pl-4 md:pl-6' : 'border-transparent'} border-l-2`}>
-      <Card className="mb-4 transition-colors hover:bg-muted/30">
+    <div
+      className={`${
+        depth > 0 ? "ml-4 md:ml-6 border-muted pl-4 md:pl-6" : ""
+      } border-l-2`}
+    >
+      <Card className="mb-4 hover:bg-muted/30">
         <CardHeader className="pb-3">
-          <div className="flex items-start gap-3">
+          <div className="flex gap-3">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={`https://api.dicebear.com/8.x/lorelei/svg?seed=${comment.author}`} />
-              <AvatarFallback className="text-xs bg-primary/10">
+              <AvatarImage
+                src={`https://api.dicebear.com/8.x/lorelei/svg?seed=${comment.author}`}
+              />
+              <AvatarFallback>
                 {getInitials(comment.author)}
               </AvatarFallback>
             </Avatar>
-            
-            <div className="flex-1 min-w-0">
+
+            <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <span className="font-medium text-sm">{comment.author}</span>
-                <span className="text-xs text-muted-foreground">•</span>
-                <span className="text-xs text-muted-foreground">{comment.timestamp}</span>
-                {isOp && <Badge variant="secondary" className="text-xs">OP</Badge>}
+                <span className="text-xs text-muted-foreground">
+                  {formatTimestamp(comment.timestamp)}
+                </span>
+                {isOp && <Badge>OP</Badge>}
               </div>
-              
-              <div className="text-sm leading-relaxed mb-3">{comment.content}</div>
-              
-              <div className="flex flex-wrap items-center gap-1">
-                {/* Vote buttons */}
+
+              <p className="text-sm mb-3">{comment.content}</p>
+
+              <div className="flex items-center gap-1 flex-wrap">
+
+                {/* Voting */}
                 <div className="flex items-center bg-muted rounded-full p-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={`h-6 w-6 p-0 rounded-full ${userVote === 'up' ? 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400' : ''}`}
-                    onClick={() => handleVote('up')}
+                  <Button size="sm" variant="ghost"
+                    onClick={() => handleVote("up")}
                   >
-                    <ChevronUp className="h-3 w-3" />
+                    <ChevronUp size={14} />
                   </Button>
-                  <span className={`px-2 text-xs font-medium min-w-[24px] text-center ${userVote === 'up' ? 'text-orange-600 dark:text-orange-400' : userVote === 'down' ? 'text-blue-600 dark:text-blue-400' : ''}`}>
-                    {netScore}
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={`h-6 w-6 p-0 rounded-full ${userVote === 'down' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : ''}`}
-                    onClick={() => handleVote('down')}
+
+                  <span className="px-2 text-xs">{netScore}</span>
+
+                  <Button size="sm" variant="ghost"
+                    onClick={() => handleVote("down")}
                   >
-                    <ChevronDown className="h-3 w-3" />
+                    <ChevronDown size={14} />
                   </Button>
                 </div>
 
-                {/* Action buttons */}
-                <Button variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={() => setShowReplyBox(!showReplyBox)}>
-                  <Reply className="h-3 w-3 mr-1" /> Reply
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setShowReplyBox(!showReplyBox)}
+                >
+                  <Reply size={14} /> Reply
                 </Button>
-                <Button variant="ghost" size="sm" className="h-7 px-2 text-xs"><Award className="h-3 w-3 mr-1" /> Award</Button>
-                <Button variant="ghost" size="sm" className="h-7 px-2 text-xs"><Share className="h-3 w-3 mr-1" /> Share</Button>
-                <Button variant="ghost" size="sm" className="h-7 w-7 p-0"><MoreHorizontal className="h-3 w-3" /></Button>
 
-                {/* Collapse toggle */}
-                {comment.replies && comment.replies.length > 0 && (
-                  <Button variant="ghost" size="sm" className="h-7 px-2 text-xs md:ml-auto" onClick={() => setIsExpanded(!isExpanded)}>
-                    {isExpanded ? 'Collapse' : `Expand (${comment.replies.length})`}
+                {/* <Button size="sm" variant="ghost">
+                  <Award size={14} /> Award
+                </Button>
+
+                <Button size="sm" variant="ghost">
+                  <Share size={14} /> Share
+                </Button>
+
+                <Button size="sm" variant="ghost">
+                  <MoreHorizontal size={14} />
+                </Button> */}
+
+                {comment.replies?.length > 0 && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="ml-auto"
+                    onClick={() => setIsExpanded(!isExpanded)}
+                  >
+                    {isExpanded
+                      ? "Collapse"
+                      : `Expand (${comment.replies.length})`}
                   </Button>
                 )}
               </div>
             </div>
           </div>
         </CardHeader>
-        
+
         {showReplyBox && (
-          <CardContent className="pt-0">
-            <div className="flex gap-3">
-              <Avatar className="h-7 w-7 mt-1">
-                <AvatarFallback className="text-xs bg-primary/10">YU</AvatarFallback>
-              </Avatar>
-              <div className="flex-1 space-y-2">
-                <Textarea
-                  placeholder="What are your thoughts?"
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  className="min-h-[80px] text-sm resize-none"
-                />
-                <div className="flex gap-2">
-                  <Button size="sm" onClick={handleReplySubmit} disabled={!replyText.trim()}>Comment</Button>
-                  <Button size="sm" variant="outline" onClick={() => { setShowReplyBox(false); setReplyText(''); }}>Cancel</Button>
-                </div>
-              </div>
+          <CardContent>
+            <Textarea
+              placeholder="Write a reply..."
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+            />
+
+            <div className="flex gap-2 mt-2">
+              <Button size="sm" onClick={handleReplySubmit}>
+                Comment
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowReplyBox(false)}
+              >
+                Cancel
+              </Button>
             </div>
           </CardContent>
         )}
       </Card>
 
-      {/* Nested replies */}
-      {isExpanded && comment.replies && comment.replies.length > 0 && (
-        <div className="space-y-0">
-          {comment.replies.map((reply) => (
-            <Comment key={reply.id} comment={reply} depth={depth + 1} onReply={onReply} />
-          ))}
-        </div>
-      )}
+      {isExpanded &&
+        comment.replies?.map((reply) => (
+          <Comment
+            key={reply.id}
+            comment={reply}
+            depth={depth + 1}
+            onReply={onReply}
+          />
+        ))}
     </div>
   );
 };
 
+/* =============================
+   Comment Thread
+============================= */
 
-// Main exported component
-export const CommentThread: React.FC<{ initialComments: CommentType[] }> = ({ initialComments }) => {
-  const [comments, setComments] = useState<CommentType[]>(initialComments);
-  const [newComment, setNewComment] = useState('');
+export const CommentThread: React.FC<{
+  comments: CommentType[];
+  onAddComment: (content: string) => void;
+  onReply: (parentId: number | string, content: string) => void;
+}> = ({ comments, onAddComment, onReply }) => {
 
-  const handleReply = (parentId: number | string, content: string) => {
-    const newReply: CommentType = {
-      id: Date.now(),
-      author: "currentuser",
-      content: content,
-      timestamp: "now",
-      upvotes: 0,
-      downvotes: 0,
-      replies: []
-    };
+  const [newComment, setNewComment] = useState("");
 
-    const addReplyToComments = (commentsList: CommentType[]): CommentType[] => {
-      return commentsList.map(comment => {
-        if (comment.id === parentId) {
-          return { ...comment, replies: [...comment.replies, newReply] };
-        }
-        if (comment.replies.length > 0) {
-          return { ...comment, replies: addReplyToComments(comment.replies) };
-        }
-        return comment;
-      });
-    };
-    setComments(addReplyToComments(comments));
-  };
-
-  const handleNewComment = () => {
-    if (newComment.trim()) {
-      const comment: CommentType = {
-        id: Date.now(),
-        author: "currentuser",
-        content: newComment,
-        timestamp: "now",
-        upvotes: 0,
-        downvotes: 0,
-        replies: []
-      };
-      setComments([comment, ...comments]);
-      setNewComment('');
-    }
-  };
+  function handleNewComment() {
+    if (!newComment.trim()) return;
+    onAddComment(newComment);
+    setNewComment("");
+  }
 
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-6">
-      {/* New comment input */}
+    <div className="space-y-6">
+
+      {/* New Comment Box */}
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex gap-3">
-            <Avatar className="h-8 w-8">
-              <AvatarFallback className="text-xs bg-primary/10">YU</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 space-y-3">
-              <Textarea
-                placeholder="Start a discussion..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                className="min-h-[100px] resize-none"
-              />
-              <div className="flex gap-2">
-                <Button onClick={handleNewComment} disabled={!newComment.trim()}>
-                  <MessageSquare className="h-4 w-4 mr-2" /> Post Comment
-                </Button>
-                <Button variant="outline" onClick={() => setNewComment('')} disabled={!newComment}>Clear</Button>
-              </div>
-            </div>
-          </div>
+        <CardContent className="pt-6 space-y-3">
+          <Textarea
+            placeholder="Start discussion..."
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+          />
+
+          <Button onClick={handleNewComment}>
+            <MessageSquare size={16} className="mr-2" />
+            Post Comment
+          </Button>
         </CardContent>
       </Card>
 
-      {/* Comments list */}
-      <div className="space-y-0">
-        {comments.map((comment, index) => (
-          <Comment key={comment.id} comment={comment} depth={0} onReply={handleReply} isOp={index === 0} />
-        ))}
-      </div>
+      {/* Comment List */}
+      {comments?.map((comment, index) => (
+        <Comment
+          key={comment.id}
+          comment={comment}
+          onReply={onReply}
+          isOp={index === 0}
+        />
+      ))}
 
-      {comments.length === 0 && (
-        <div className="text-center py-12 text-muted-foreground">
-          <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p>No comments yet. Be the first to start the discussion!</p>
-        </div>
+      {comments?.length === 0 && (
+        <p className="text-center text-muted-foreground py-8">
+          No comments yet
+        </p>
       )}
     </div>
   );

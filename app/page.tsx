@@ -32,15 +32,15 @@ export default function Home() {
     <FeatureDemo />
   </section> */}
 
-  <section id="reviews">
-    <Reviews />
-  </section>
-
   <section id="signup">
     <Signup />
   </section>
   <section id="KnowMoreAboutMe">
     <KnowMoreAboutMe />
+  </section>
+
+  <section id="reviews">
+    <Reviews />
   </section>
   </> 
   ) 

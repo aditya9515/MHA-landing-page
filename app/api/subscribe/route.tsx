@@ -29,7 +29,7 @@ export async function POST(req: Request) {
             .from("newsletter_subscribers")
             .update({
             verification_token: token,
-            created_at: now // 🔥 reset expiry timer
+            token_created_at: now // 🔥 reset expiry timer
             })
             .eq("email", email)
         }
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
             .insert({
             email,
             verification_token: token,
-            created_at: now
+            token_created_at: now
             })
         }
 
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
         html: `
             <p>Hi,</p>
 
-            <p>Thanks for subscribing to UniTrend.</p>
+            <p>Thanks for subscribing to Rolcy.</p>
 
             <p>Your verification link expires in 2 minutes.</p>
 

@@ -8,7 +8,7 @@ export async function GET(req: Request) {
         const token = searchParams.get("token")
 
         if (!token) {
-        return Response.redirect(
+        return Response.redirect(   
             `${process.env.NEXT_PUBLIC_SITE_URL}/error`
         )
         }
@@ -21,13 +21,15 @@ export async function GET(req: Request) {
         .single()
 
         if (error || !data) {
+            
         return Response.redirect(
+            
             `${process.env.NEXT_PUBLIC_SITE_URL}/error`
         )
         }
 
         // ✅ Expiry check
-        const createdAt = new Date(data.created_at)
+        const createdAt = new Date(data.token_created_at)
         const now = new Date()
 
         const diffMs = now.getTime() - createdAt.getTime()
@@ -50,10 +52,20 @@ export async function GET(req: Request) {
         .eq("id", data.id)
 
         // ✅ Add to resend audience
-        await resend.contacts.create({
-        email: data.email,
-        audienceId: process.env.RESEND_AUDIENCE_ID!
-        })
+        try {
+            await resend.contacts.create({
+                email: data.email,
+                audienceId: process.env.RESEND_AUDIENCE_ID!,
+            })
+            } catch (resendError: any) {
+
+            // Prevent duplicate crash
+            if (!resendError.message?.includes("already exists")) {
+                throw resendError
+            }
+
+            console.log("Contact already exists in Resend")
+            }
 
         return Response.redirect(
         `${process.env.NEXT_PUBLIC_SITE_URL}/success`
