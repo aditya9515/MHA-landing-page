@@ -33,7 +33,7 @@ export default function Home() {
     <FeatureDemo />
   </section>
 
-  <section id="new features">
+  <section id="Agent">
     <AnimatedNumberCountDownDemo />
   </section>
 

@@ -12,11 +12,12 @@ export function Header() {
 	const scrolled = useScroll(10);
 
 	const links = [
-		{ label: "Hero", href: "#hero" },
 		{ label: "Security", href: "#security" },
 		{ label: "Chat", href: "#chat-preview" },
+		{ label: "New", href: "#new features" },
 		{ label: "Signup", href: "#signup" },
-		{ label: "Reviews", href: "#reviews" },
+		{ label: "About", href: "#KnowMoreAboutMe" },
+		{ label: "Comments", href: "#reviews" },
 ];
 
 	React.useEffect(() => {
