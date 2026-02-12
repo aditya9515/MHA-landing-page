@@ -6,7 +6,7 @@ export default function Hero() {
   const words = [
     "Your Private AI Mental Health Agent",
     "Confidential. Secure. Always Available.",
-    "Meet Your AI Companion, Emily Hartman"
+    "Meet Your AI Companion, Emily"
   ];
 
   return (

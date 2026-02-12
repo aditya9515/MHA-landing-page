@@ -39,10 +39,10 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
     >
       <div className="max-w-7xl mx-auto py-20 px-4 md:px-8 lg:px-10">
         <h2 className="text-lg md:text-4xl mb-4 text-black dark:text-white max-w-4xl">
-          Emily Hartman’s Journey
+          Emily’s Journey
         </h2>
         <p className="text-neutral-700 dark:text-neutral-300 text-sm md:text-base max-w-sm">
-          Discover how Emily Hartman evolved into a powerful AI companion, capable of supporting conversations, emotions, and even critical moments with care and intelligence.
+          Discover how Emily evolved into a powerful AI companion, capable of supporting conversations, emotions, and even critical moments with care and intelligence.
         </p>
       </div>
 
