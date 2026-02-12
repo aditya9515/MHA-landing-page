@@ -55,8 +55,8 @@ export async function GET(req: Request) {
         try {
             await resend.contacts.create({
                 email: data.email,
-                audienceId: process.env.RESEND_AUDIENCE_ID!,
-            })
+                unsubscribed: false,
+            });
             } catch (resendError: any) {
 
             // Prevent duplicate crash

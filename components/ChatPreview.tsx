@@ -12,7 +12,7 @@ export default function ChatPreview() {
       content: (
         <div>
           <p className="text-neutral-800 dark:text-neutral-200 text-sm font-normal mb-6">
-            Emily Hartman is always ready for friendly, natural conversations. Share your thoughts, unwind after a long day, or just chat about anything on your mind—without judgment.
+            Emily is always ready for friendly, natural conversations. Share your thoughts, unwind after a long day, or just chat about anything on your mind—without judgment.
           </p>
 
           <ul className="space-y-2 text-neutral-700 dark:text-neutral-300 text-sm mb-8">
@@ -21,7 +21,7 @@ export default function ChatPreview() {
             <li>• Available anytime, anywhere</li>
           </ul>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* <div className="grid grid-cols-2 gap-4">
             <Image
               src="/chat1.png"
               alt="friendly chat preview"
@@ -36,7 +36,7 @@ export default function ChatPreview() {
               height={500}
               className="rounded-lg object-cover w-full h-40"
             />
-          </div>
+          </div> */}
         </div>
       ),
     },
@@ -46,7 +46,7 @@ export default function ChatPreview() {
       content: (
         <div>
           <p className="text-neutral-800 dark:text-neutral-200 text-sm font-normal mb-6">
-            Emily Hartman provides empathetic support to help you manage stress, anxiety, and daily challenges. Receive calm, understanding guidance whenever you need it.
+            Emily provides empathetic support to help you manage stress, anxiety, and daily challenges. Receive calm, understanding guidance whenever you need it.
           </p>
 
           <ul className="space-y-2 text-neutral-700 dark:text-neutral-300 text-sm mb-8">
@@ -55,7 +55,7 @@ export default function ChatPreview() {
             <li>• Fully private and secure</li>
           </ul>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* <div className="grid grid-cols-2 gap-4">
             <Image
               src="/emotion1.png"
               alt="emotional support"
@@ -70,7 +70,7 @@ export default function ChatPreview() {
               height={500}
               className="rounded-lg object-cover w-full h-40"
             />
-          </div>
+          </div> */}
         </div>
       ),
     },
@@ -80,7 +80,7 @@ export default function ChatPreview() {
       content: (
         <div>
           <p className="text-neutral-800 dark:text-neutral-200 text-sm font-normal mb-6">
-            In urgent situations, Emily Hartman can help connect you with trusted contacts or professional support. It monitors critical cues responsibly to ensure you’re never alone during high-stress moments.
+            In urgent situations, Emily can help connect you with trusted contacts or professional support. It monitors critical cues responsibly to ensure you’re never alone during high-stress moments.
           </p>
 
           <ul className="space-y-2 text-neutral-700 dark:text-neutral-300 text-sm mb-8">
@@ -89,7 +89,7 @@ export default function ChatPreview() {
             <li>• Escalates responsibly in emergencies</li>
           </ul>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* <div className="grid grid-cols-2 gap-4">
             <Image
               src="/emergency1.png"
               alt="emergency support"
@@ -104,7 +104,7 @@ export default function ChatPreview() {
               height={500}
               className="rounded-lg object-cover w-full h-40"
             />
-          </div>
+          </div> */}
         </div>
       ),
     },

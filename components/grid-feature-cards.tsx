@@ -13,8 +13,7 @@ type FeatureCardPorps = React.ComponentProps<'div'> & {
 };
 
 export function FeatureCard({ feature, className, ...props }: FeatureCardPorps) {
-	const p = genRandomPattern();
-
+	const p = React.useMemo(() => genRandomPattern(), []);
 	return (
 		<div className={cn('relative overflow-hidden p-6', className)} {...props}>
 			<div className="pointer-events-none absolute top-0 left-1/2 -mt-2 -ml-20 h-full w-full [mask-image:linear-gradient(white,transparent)]">

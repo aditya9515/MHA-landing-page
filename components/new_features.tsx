@@ -3,7 +3,7 @@ import { Feature } from "@/components/ui/feature-section-with-bento-grid";
 
 function FeatureDemo() {
     return (
-        <div className="w-full">
+        <div className="max-w-5xl mx-auto">
         <Feature />
         </div>
     );

@@ -6,6 +6,7 @@ import Reviews from "@/components/Reviews"
 import { Header } from "@/components/header-2"
 import { FeatureDemo } from "@/components/new_features"
 import KnowMoreAboutMe from "@/components/knowmore"
+import AnimatedNumberCountDownDemo from "@/components/countdown"
 
 
 
@@ -28,9 +29,13 @@ export default function Home() {
     <ChatPreview />
   </section>
 
-  {/* <section id="new features">
+  <section id="new features">
     <FeatureDemo />
-  </section> */}
+  </section>
+
+  <section id="new features">
+    <AnimatedNumberCountDownDemo />
+  </section>
 
   <section id="signup">
     <Signup />
