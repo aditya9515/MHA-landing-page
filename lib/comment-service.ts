@@ -32,7 +32,7 @@ export async function fetchComments() {
     const { data, error } = await supabase
         .from("comments")
         .select("*")
-        .order("timestamp", { ascending: true });
+        .order("timestamp", { ascending: false });
 
     if (error) throw error;
 
